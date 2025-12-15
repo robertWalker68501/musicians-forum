@@ -28,7 +28,6 @@ model User {
   displayName String?
   imageUrl    String?
   role        UserRole @default(USER)
-
   threads     Thread[]
   posts       Post[]
   reportsMade Report[] @relation("ReportsMade")
@@ -40,31 +39,30 @@ model User {
 }
 
 model Category {
-  id          String  @id @default(cuid())
+  id          String   @id @default(cuid())
+  forumId     String
   name        String
-  slug        String  @unique
+  slug        String
   description String?
-  position    Int     @default(0)
-  isLocked    Boolean @default(false)
-
-  threads Thread[]
+  position    Int      @default(0)
+  isLocked    Boolean  @default(false)
+  forum       Forum    @relation(fields: [forumId], references: [id], onDelete: Cascade)
+  threads     Thread[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([position])
+  @@unique([forumId, slug])
+  @@index([forumId, position])
 }
 
 model Thread {
-  id         String @id @default(cuid())
+  id         String   @id @default(cuid())
   categoryId String
   authorId   String
-
-  title    String
-  isPinned Boolean @default(false)
-  isLocked Boolean @default(false)
-
-  // denormalized helpers for fast lists
+  title      String
+  isPinned   Boolean  @default(false)
+  isLocked   Boolean  @default(false)
   replyCount Int      @default(0)
   lastPostAt DateTime @default(now())
 
@@ -80,13 +78,10 @@ model Thread {
 }
 
 model Post {
-  id       String @id @default(cuid())
-  threadId String
-  authorId String
-
-  body String
-
-  // moderation / soft-hide (keep record for mods)
+  id           String  @id @default(cuid())
+  threadId     String
+  authorId     String
+  body         String
   isHidden     Boolean @default(false)
   hiddenReason String?
 
@@ -103,12 +98,11 @@ model Post {
 }
 
 model Report {
-  id         String @id @default(cuid())
+  id         String       @id @default(cuid())
   postId     String
   reporterId String
-
-  reason String
-  status ReportStatus @default(OPEN)
+  reason     String
+  status     ReportStatus @default(OPEN)
 
   post     Post @relation(fields: [postId], references: [id], onDelete: Cascade)
   reporter User @relation("ReportsMade", fields: [reporterId], references: [id], onDelete: Restrict)
@@ -118,4 +112,19 @@ model Report {
 
   @@index([status, createdAt])
   @@index([postId])
+}
+
+model Forum {
+  id          String     @id @default(cuid())
+  name        String
+  slug        String     @unique
+  description String?
+  isLocked    Boolean    @default(false)
+  position    Int        @default(0)
+  categories  Category[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([position])
 }
