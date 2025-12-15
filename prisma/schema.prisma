@@ -1,0 +1,121 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  ADMIN
+  MODERATOR
+  USER
+}
+
+enum ReportStatus {
+  OPEN
+  REVIEWING
+  RESOLVED
+  DISMISSED
+}
+
+model User {
+  id          String   @id @default(cuid())
+  clerkId     String   @unique
+  email       String   @unique
+  username    String?  @unique
+  displayName String?
+  imageUrl    String?
+  role        UserRole @default(USER)
+
+  threads     Thread[]
+  posts       Post[]
+  reportsMade Report[] @relation("ReportsMade")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([role])
+}
+
+model Category {
+  id          String  @id @default(cuid())
+  name        String
+  slug        String  @unique
+  description String?
+  position    Int     @default(0)
+  isLocked    Boolean @default(false)
+
+  threads Thread[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([position])
+}
+
+model Thread {
+  id         String @id @default(cuid())
+  categoryId String
+  authorId   String
+
+  title    String
+  isPinned Boolean @default(false)
+  isLocked Boolean @default(false)
+
+  // denormalized helpers for fast lists
+  replyCount Int      @default(0)
+  lastPostAt DateTime @default(now())
+
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  author   User     @relation(fields: [authorId], references: [id], onDelete: Restrict)
+  posts    Post[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([categoryId, isPinned, lastPostAt])
+  @@index([authorId, createdAt])
+}
+
+model Post {
+  id       String @id @default(cuid())
+  threadId String
+  authorId String
+
+  body String
+
+  // moderation / soft-hide (keep record for mods)
+  isHidden     Boolean @default(false)
+  hiddenReason String?
+
+  thread  Thread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  author  User     @relation(fields: [authorId], references: [id], onDelete: Restrict)
+  reports Report[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([threadId, createdAt])
+  @@index([authorId, createdAt])
+  @@index([isHidden])
+}
+
+model Report {
+  id         String @id @default(cuid())
+  postId     String
+  reporterId String
+
+  reason String
+  status ReportStatus @default(OPEN)
+
+  post     Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  reporter User @relation("ReportsMade", fields: [reporterId], references: [id], onDelete: Restrict)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status, createdAt])
+  @@index([postId])
+}
