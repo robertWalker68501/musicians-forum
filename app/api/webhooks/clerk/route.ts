@@ -1,7 +1,7 @@
 import { headers } from 'next/headers';
 import { Webhook } from 'svix';
 
-import prisma from '@/lib/prisma';
+import { prisma } from '@/lib/prisma';
 
 // Narrowed event shape (good enough for user sync)
 type ClerkWebhookEvent =
