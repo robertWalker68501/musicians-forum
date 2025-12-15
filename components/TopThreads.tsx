@@ -56,7 +56,10 @@ const TopThreads = async () => {
                       By <span className='text-foreground'>{authorName}</span>
                     </span>
                     <span className='flex items-center gap-3'>
-                      <span>{t.replyCount} replies</span>
+                      <span>
+                        {t.replyCount}{' '}
+                        {t.replyCount === 1 ? 'reply' : 'replies'}
+                      </span>
                       <span>•</span>
                       <span>{timeAgo(t.lastPostAt)}</span>
                     </span>
