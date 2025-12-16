@@ -12,7 +12,7 @@ const Navbar = ({ isAuthed }: { isAuthed: boolean }) => {
         Musicians Forum
       </Link>
 
-      <nav className='text-muted-foreground hidden items-center gap-6 text-sm md:flex'>
+      <div className='text-muted-foreground hidden items-center gap-6 text-sm md:flex'>
         <Link
           className='hover:text-foreground'
           href='/categories'
@@ -31,7 +31,7 @@ const Navbar = ({ isAuthed }: { isAuthed: boolean }) => {
         >
           About
         </Link>
-      </nav>
+      </div>
 
       <div className='flex items-center gap-2'>
         <Button
