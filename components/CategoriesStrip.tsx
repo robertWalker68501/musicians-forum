@@ -27,18 +27,18 @@ const CategoriesStrip = async () => {
         </div>
 
         <div className='mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
-          {categories.map((c) => (
+          {categories.map((category) => (
             <Link
-              key={c.slug}
-              href={`/c/${c.slug}`}
+              key={category.slug}
+              href={`/categories/${category.slug}`}
               className='group'
             >
               <Card className='h-full transition-shadow group-hover:shadow-md'>
                 <CardHeader className='pb-2'>
-                  <CardTitle className='text-base'>{c.name}</CardTitle>
+                  <CardTitle className='text-base'>{category.name}</CardTitle>
                 </CardHeader>
                 <CardContent className='text-muted-foreground text-sm'>
-                  {c.description ??
+                  {category.description ??
                     'Explore threads and start a new conversation.'}
                 </CardContent>
               </Card>

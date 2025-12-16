@@ -29,25 +29,27 @@ const TopThreads = async () => {
         </div>
 
         <div className='mt-6 grid gap-4 lg:grid-cols-2'>
-          {threads.map((t) => {
+          {threads.map((thread) => {
             const authorName =
-              t.author.displayName || t.author.username || 'Unknown';
+              thread.author.displayName || thread.author.username || 'Unknown';
             return (
               <Link
-                key={t.id}
-                href={`/t/${t.id}`}
+                key={thread.id}
+                href={`/threads/${thread.id}`}
                 className='group'
               >
                 <Card className='transition-shadow group-hover:shadow-md'>
                   <CardHeader className='space-y-2'>
                     <div className='flex flex-wrap items-center gap-2'>
-                      {t.isPinned && <Badge>Pinned</Badge>}
-                      <Badge variant='secondary'>{t.category.name}</Badge>
-                      {t.isLocked && <Badge variant='outline'>Locked</Badge>}
+                      {thread.isPinned && <Badge>Pinned</Badge>}
+                      <Badge variant='secondary'>{thread.category.name}</Badge>
+                      {thread.isLocked && (
+                        <Badge variant='outline'>Locked</Badge>
+                      )}
                     </div>
 
                     <CardTitle className='text-base leading-snug'>
-                      {t.title}
+                      {thread.title}
                     </CardTitle>
                   </CardHeader>
 
@@ -57,11 +59,11 @@ const TopThreads = async () => {
                     </span>
                     <span className='flex items-center gap-3'>
                       <span>
-                        {t.replyCount}{' '}
-                        {t.replyCount === 1 ? 'reply' : 'replies'}
+                        {thread.replyCount}{' '}
+                        {thread.replyCount === 1 ? 'reply' : 'replies'}
                       </span>
                       <span>•</span>
-                      <span>{timeAgo(t.lastPostAt)}</span>
+                      <span>{timeAgo(thread.lastPostAt)}</span>
                     </span>
                   </CardContent>
                 </Card>

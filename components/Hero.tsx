@@ -51,28 +51,28 @@ const Hero = async () => {
               <span>Popular:</span>
               <Link
                 className='hover:text-foreground underline underline-offset-4'
-                href='/c/recording'
+                href='/categories/recording'
               >
                 Recording
               </Link>
               <span>•</span>
               <Link
                 className='hover:text-foreground underline underline-offset-4'
-                href='/c/gear'
+                href='/categories/gear'
               >
                 Gear
               </Link>
               <span>•</span>
               <Link
                 className='hover:text-foreground underline underline-offset-4'
-                href='/c/industry'
+                href='/categories/industry'
               >
                 Industry
               </Link>
               <span>•</span>
               <Link
                 className='hover:text-foreground underline underline-offset-4'
-                href='/c/collaboration'
+                href='/categories/collaboration'
               >
                 Collaboration
               </Link>
@@ -103,7 +103,9 @@ const Hero = async () => {
                   variant='secondary'
                   size='sm'
                 >
-                  <Link href={userId ? '/c/introductions' : '/sign-up'}>
+                  <Link
+                    href={userId ? '/categories/introductions' : '/sign-up'}
+                  >
                     Introduce yourself
                   </Link>
                 </Button>
