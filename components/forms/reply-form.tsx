@@ -37,6 +37,8 @@ export function ReplyForm({ threadId }: { threadId: string }) {
       }
 
       form.reset({ threadId, body: '' });
+    } catch {
+      setServerError('Something went wrong. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
