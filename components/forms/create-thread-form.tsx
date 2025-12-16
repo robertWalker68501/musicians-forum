@@ -36,6 +36,8 @@ export function CreateThreadForm({ categorySlug }: { categorySlug: string }) {
       const res = await createThread(values);
       // On success, server action will redirect; this only runs if it returns
       if (res && !res.ok) setServerError(res.error ?? 'Something went wrong.');
+    } catch {
+      setServerError('Something went wrong. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
